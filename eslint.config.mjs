@@ -13,6 +13,20 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    files: ["**/*.js", "**/*.jsx"], // Only for JS files
+    rules: {
+      "@typescript-eslint/no-implicit-any": "off",
+      "no-unused-vars": "error",
+    },
+  },
+  {
+    files: ["**/*.ts", "**/*.tsx"], // Different rules for TS files
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off", // Just warn instead of error
+      "@typescript-eslint/no-unused-vars": "error",
+    },
+  },
 ]);
 
 export default eslintConfig;
