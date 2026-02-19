@@ -66,7 +66,7 @@ export default function LandingPage() {
     <main className="bg-black">
       <Navbar />
       <Hero />
-      <Partners partners={partners} />
+      <Partners partners={partners} isLandingPage />
       <Services services={services} />
       <Footer />
     </main>

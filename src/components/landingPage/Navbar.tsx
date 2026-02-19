@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { handleScrollToSection } from "@/src/utilities/globalHelpers";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -49,43 +50,43 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="#partners"
-            className="text-sm text-white/60 hover:text-white transition-colors duration-200 tracking-wide uppercase"
+          <p
+            onClick={() => handleScrollToSection("partners")}
+            className="text-sm text-white/60 hover:text-white transition-colors duration-200 tracking-wide uppercase cursor-pointer"
           >
             Partners
-          </Link>
-          <Link
-            href="#services"
-            className="text-sm text-white/60 hover:text-white transition-colors duration-200 tracking-wide uppercase"
+          </p>
+          <p
+            onClick={() => handleScrollToSection("services")}
+            className="text-sm text-white/60 hover:text-white transition-colors duration-200 tracking-wide uppercase cursor-pointer"
           >
             Services
-          </Link>
-          <Link
-            href="#"
-            className="text-sm text-white/60 hover:text-white transition-colors duration-200 tracking-wide uppercase"
-          >
-            About
-          </Link>
+          </p>
         </div>
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2">
-            Log In
-          </button>
-          <button
-            className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group"
-            style={{ background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)" }}
-          >
-            <span className="relative z-10 text-white">Join Now</span>
-            <span
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          <Link href="/login">
+            <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2 cursor-pointer">
+              Log In
+            </button>
+          </Link>
+          <Link href="/login">
+            <button
+              className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
               style={{
-                background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
               }}
-            />
-          </button>
+            >
+              <span className="relative z-10 text-white">Join Now</span>
+              <span
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                }}
+              />
+            </button>
+          </Link>
         </div>
 
         {/* Mobile menu btn */}
@@ -122,7 +123,7 @@ export function Navbar() {
         )}
       >
         <div className="px-6 py-4 flex flex-col gap-4 bg-black/90 border-t border-white/5">
-          {["Partners", "Services", "About"].map((item) => (
+          {["Partners", "Services"].map((item) => (
             <Link
               key={item}
               href={`#${item.toLowerCase()}`}

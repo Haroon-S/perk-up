@@ -20,7 +20,7 @@ export function Footer() {
           © 2026 PerkUp. All rights reserved.
         </p>
         <div className="flex gap-6">
-          {["Privacy", "Terms", "Contact"].map((item) => (
+          {["Privacy", "Terms"].map((item) => (
             <Link
               key={item}
               href="#"
