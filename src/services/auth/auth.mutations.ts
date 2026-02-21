@@ -13,13 +13,13 @@ interface RegisterPayload {
 }
 
 export const userRegister = async (values: RegisterPayload) => {
-  const { data } = await axiosInstance.post("/user/register/", values);
+  const { data } = await axiosInstance.post("user/register/", values);
 
   return data;
 };
 
 export const userLogin = async (values: LoginPayload) => {
-  const { data } = await axiosInstance.post("/user/login/", values);
+  const { data } = await axiosInstance.post("user/login/", values);
   return data;
 };
 

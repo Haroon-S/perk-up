@@ -8,6 +8,8 @@ export interface MemberProfile {
   membership_id: string;
   qr_code: string | null;
   is_active: boolean;
+  redemption_count: number;
+  total_offers: number;
 }
 
 export interface UserProfile {
@@ -39,15 +41,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
     setCookie("access_token", access, {
-      httpOnly: true,
-      secure: false,
       maxAge: 60 * 60 * 24,
       path: "/",
     });
 
     setCookie("refresh_token", refresh, {
-      httpOnly: true,
-      secure: false,
       maxAge: 60 * 60 * 24,
       path: "/",
     });

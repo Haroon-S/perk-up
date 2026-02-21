@@ -1,33 +1,49 @@
-"use server";
-
-import { cookies } from "next/headers";
-
-export async function setCookie(
+// Client-side cookie helpers
+export function setCookie(
   name: string,
   value: string,
   options: {
     maxAge?: number;
     path?: string;
-    httpOnly?: boolean;
+    domain?: string;
     secure?: boolean;
+    sameSite?: "strict" | "lax" | "none";
   } = {}
 ) {
-  const cookieStore = await cookies();
-  cookieStore.set(name, value, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24,
-    path: "/",
-    ...options,
-  });
+  let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+  if (options.maxAge) {
+    cookieString += `; max-age=${options.maxAge}`;
+  }
+  if (options.path) {
+    cookieString += `; path=${options.path}`;
+  } else {
+    cookieString += "; path=/";
+  }
+  if (options.domain) {
+    cookieString += `; domain=${options.domain}`;
+  }
+  if (options.secure || process.env.NODE_ENV === "production") {
+    cookieString += "; secure";
+  }
+  if (options.sameSite) {
+    cookieString += `; samesite=${options.sameSite}`;
+  } else {
+    cookieString += "; samesite=lax";
+  }
+
+  if (typeof document !== "undefined") {
+    document.cookie = cookieString;
+  }
 }
 
-export async function getCookie(name: string) {
-  const cookieStore = await cookies();
-  return cookieStore.get(name)?.value ?? null;
+export function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+
+  const b = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
+  return b ? decodeURIComponent(b.pop()!) : null;
 }
 
-export async function deleteCookie(name: string) {
-  const cookieStore = await cookies();
-  cookieStore.delete(name);
+export function deleteCookie(name: string) {
+  setCookie(name, "", { maxAge: -1 });
 }
