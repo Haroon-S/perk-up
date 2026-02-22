@@ -27,7 +27,7 @@ function ResetPasswordForm() {
   return (
     <div className=" w-full h-screen flex-center p-5 md:p-0">
       <div className=" max-h-[90dvh] w-[500px] flex-center flex-col p-3 bg-gradient-to-tl from-gray-50 via-white to-gray-100 rounded-2xl shadow-xl border border-border">
-        <Image src={"/logo.png"} alt="" width={100} height={100} />
+        <Image src={"/logo-perk.png"} alt="" width={100} height={100} />
         <div className="grid w-full max-w-sm items-center gap-3 mb-8 mt-6">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -41,6 +41,7 @@ function ResetPasswordForm() {
         </div>
         <CommonSubmitButton
           id="reset-submit"
+          className="perk-gradient"
           onClick={handleSubmit}
           disabled={loading}
           loading={loading}

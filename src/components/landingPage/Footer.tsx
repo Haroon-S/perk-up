@@ -1,10 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Footer() {
   return (
     <footer className="relative py-12 bg-black border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <span
+        <Image src={"/logo-perk.png"} alt="" width={100} height={100} />
+        {/* <span
           className="text-xl font-black"
           style={{
             fontFamily: "'Arial Black', sans-serif",
@@ -13,9 +15,9 @@ export function Footer() {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
           }}
-        >
-          PerkUp
-        </span>
+        > */}
+        {/* PerkUp
+        </span> */}
         <p className="text-white/30 text-sm">
           © 2026 PerkUp. All rights reserved.
         </p>

@@ -41,7 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="#">
-                <Image src={"/logo.png"} alt="" width={60} height={60} />
+                <Image src={"/logo-perk.png"} alt="" width={60} height={60} />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

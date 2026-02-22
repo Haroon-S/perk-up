@@ -28,7 +28,7 @@ function CommonSubmitButton({
         id={id}
         className={cn(
           !defaultVariant &&
-            "relative z-10 h-[40px] w-[180px] text-[14px] font-medium text-primary-foreground disabled:cursor-not-allowed",
+            "relative z-10 h-[40px] w-[180px] text-[14px] font-medium text-primary-foreground cursor-pointer disabled:cursor-not-allowed",
           className,
         )}
         type="submit"

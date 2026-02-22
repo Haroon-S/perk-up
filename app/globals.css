@@ -56,7 +56,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #4f6eff;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -129,5 +129,8 @@
   }
   .page-container {
     @apply w-full max-w-7xl px-8 flex items-center justify-center;
+  }
+  .perk-gradient {
+    @apply bg-gradient-to-br from-[#4F6EFF] to-[#8B5CF6];
   }
 }

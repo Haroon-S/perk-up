@@ -54,7 +54,7 @@ function RegisterForm() {
   return (
     <div className=" w-full min-h-screen flex-center">
       <div className=" md:absolute md:w-[500px] flex-center flex-col p-3 pb-0 bg-gradient-to-tl from-gray-50 via-white to-gray-100 rounded-2xl shadow-xl border border-border">
-        <Image src={"/logo.png"} alt="" width={100} height={100} />
+        <Image src={"/logo-perk.png"} alt="" width={100} height={100} />
         <div className=" w-full mt-[24px] p-3 pb-7 md:overflow-auto">
           <Form {...form}>
             <form
@@ -137,6 +137,7 @@ function RegisterForm() {
               </div>
               <CommonSubmitButton
                 id="register-submit"
+                className="perk-gradient"
                 loading={isPending}
                 onClick={form.handleSubmit(onSubmit)}
               />

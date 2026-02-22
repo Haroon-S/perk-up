@@ -61,7 +61,7 @@ function LoginForm() {
   return (
     <div className=" w-full h-screen  flex-center p-10">
       <div className=" w-full md:w-[500px] flex-center flex-col p-3 bg-gradient-to-tl from-gray-50/65 via-white/65 to-gray-100/65 backdrop-blur-sm rounded-2xl shadow-xl border border-border">
-        <Image src={"/logo.png"} alt="" width={100} height={100} />
+        <Image src={"/logo-perk.png"} alt="" width={100} height={100} />
         <div className=" w-full mt-[24px] p-3">
           <Form {...form}>
             <form
@@ -146,7 +146,7 @@ function LoginForm() {
               </div>
               <CommonSubmitButton
                 id="login-submit"
-                className="shadow-md"
+                className="shadow-md perk-gradient"
                 onClick={form.handleSubmit(onSubmit)}
                 loading={isPending}
               />

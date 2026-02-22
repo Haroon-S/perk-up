@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { handleScrollToSection } from "@/src/utilities/globalHelpers";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -25,8 +26,8 @@ export function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <div className="relative">
+        <Image src={"/logo-perk.png"} alt="" width={100} height={100} />
+        {/* <div className="relative">
           <span
             className="text-2xl font-black tracking-tight"
             style={{
@@ -46,7 +47,7 @@ export function Navbar() {
               background: "linear-gradient(90deg, #4F6EFF, transparent)",
             }}
           />
-        </div>
+        </div> */}
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
