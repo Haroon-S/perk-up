@@ -131,6 +131,6 @@
     @apply w-full max-w-7xl px-8 flex items-center justify-center;
   }
   .perk-gradient {
-    @apply bg-gradient-to-br from-[#4F6EFF] to-[#8B5CF6];
+    @apply bg-linear-to-br from-[#4F6EFF] to-[#8B5CF6];
   }
 }
