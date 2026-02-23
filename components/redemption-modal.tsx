@@ -43,7 +43,7 @@ export function RedemptionModal({ isOpen, onClose, offer, redemption }: Redempti
 
     // Polling Logic
     useEffect(() => {
-        if (!isOpen || !redemption || status === "CONFIRMED") return;
+        if (!isOpen || !redemption || status === "CONFIRMED" || timeLeft === 0) return;
 
         const pollInterval = setInterval(async () => {
             try {
@@ -76,9 +76,6 @@ export function RedemptionModal({ isOpen, onClose, offer, redemption }: Redempti
     return (
         <Sheet open={isOpen} onOpenChange={onClose}>
             <SheetContent side="bottom" className="h-[90vh] sm:h-[650px] rounded-t-3xl border-none p-6 outline-none overflow-y-auto">
-                <SheetClose className="absolute right-6 top-6 rounded-full p-2 bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors z-50">
-                    <X className="size-5" />
-                </SheetClose>
 
                 <SheetHeader className="items-center text-center mb-6">
                     <div className={`p-3 rounded-full mb-2 ${isConfirmed ? "bg-green-100" : "bg-primary/10"}`}>

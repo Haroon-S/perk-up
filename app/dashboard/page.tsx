@@ -2,6 +2,7 @@
 import { ChartNoAxesColumn, Percent, Users, Loader2, Sparkles, AlertCircle, Search } from "lucide-react";
 import React, { useState, useMemo } from "react";
 import { useGetPartners, useGetOffers } from "@/src/services/perkup/perkup.queries";
+import { useGetUserProfile } from "@/src/services/auth/auth.queries";
 import { useCreateRedemptionMutation } from "@/src/services/perkup/perkup.mutations";
 import { OfferCard } from "@/components/offer-card";
 import { RedemptionModal } from "@/components/redemption-modal";
@@ -13,6 +14,7 @@ function DashboardPage() {
   const user = useAuthStore((state) => state.user);
   const { data: partners, isLoading: partnersLoading } = useGetPartners();
   const { data: offers, isLoading: offersLoading } = useGetOffers();
+  const { data: profileData, isLoading: profileLoading, isFetched: profileFetched } = useGetUserProfile(!!useAuthStore.getState().accessToken);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOffer, setSelectedOffer] = useState<any>(null);
@@ -21,7 +23,10 @@ function DashboardPage() {
 
   const createRedemption = useCreateRedemptionMutation();
 
-  const isPremium = user?.member_profile?.membership_type?.toUpperCase() === "PREMIUM";
+  // Use profileData as priority, fall back to store user
+  const currentUser = profileData || user;
+  const isPremium = currentUser?.member_profile?.membership_type?.toUpperCase() === "PREMIUM";
+  const isProfileReady = profileFetched || !!user;
 
   const handleRedeem = async (offer: any) => {
     try {
@@ -54,71 +59,98 @@ function DashboardPage() {
     },
     {
       label: "Available Discounts",
-      value: user?.member_profile?.total_offers || 0,
+      value: currentUser?.member_profile?.total_offers || 0,
       icon: Percent,
       color: "bg-orange-500",
       description: "Exclusive deals for you",
     },
     {
       label: "Redeemed Discounts",
-      value: user?.member_profile?.redemption_count || 0,
+      value: currentUser?.member_profile?.redemption_count || 0,
       icon: Sparkles,
       color: "bg-purple-500",
       description: "Perks you've enjoyed",
     },
     {
       label: "Membership Status",
-      value: user?.member_profile?.is_active ? "Active" : "Inactive",
+      value: currentUser?.member_profile?.is_active ? "Active" : "Inactive",
       icon: AlertCircle,
-      color: user?.member_profile?.is_active ? "bg-blue-500" : "bg-red-500",
-      description: user?.member_profile?.membership_expiry ? `Expires: ${user.member_profile.membership_expiry}` : "No expiry set",
+      color: currentUser?.member_profile?.is_active ? "bg-blue-500" : "bg-red-500",
+      description: currentUser?.member_profile?.membership_expiry ? `Expires: ${currentUser.member_profile.membership_expiry}` : "No expiry set",
     },
   ];
 
   return (
     <div className="flex flex-1 flex-col gap-8 p-4 pt-0">
       {/* Membership Status Banner */}
-      <div className={`relative overflow-hidden rounded-2xl p-6 text-white shadow-lg ${isPremium ? "bg-gradient-to-r from-purple-600 to-indigo-600" : "bg-gradient-to-r from-slate-700 to-slate-900"}`}>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              Hello, {user?.username || "Member"}!
-              {isPremium && <Sparkles className="size-6 text-yellow-300 fill-yellow-300" />}
-            </h2>
-            <p className="text-white/80 mt-1">
-              Your membership level: <span className="font-bold text-white uppercase">{user?.member_profile?.membership_type || "FREE"}</span>
-            </p>
+      {!isProfileReady ? (
+        <div className="relative overflow-hidden h-32 rounded-2xl bg-slate-100 flex items-center px-8 border border-slate-200/50">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+          <div className="relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-3">
+              <div className="h-7 w-56 bg-slate-200 rounded-lg animate-pulse" />
+              <div className="h-4 w-40 bg-slate-200/80 rounded-lg animate-pulse" />
+            </div>
+            <div className="h-10 w-36 bg-slate-200 rounded-full animate-pulse hidden md:block" />
           </div>
-          {!isPremium && (
-            <button className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-slate-100 transition-colors">
-              Upgrade to Premium
-            </button>
-          )}
+          <div className="absolute right-0 top-0 -mr-8 -mt-8 size-48 rounded-full bg-slate-200/30 blur-3xl animate-pulse" />
         </div>
-        <div className="absolute right-0 top-0 -mr-8 -mt-8 size-48 rounded-full bg-white/10 blur-3xl" />
-      </div>
+      ) : (
+        <div className={`relative overflow-hidden rounded-2xl p-6 text-white shadow-lg ${isPremium ? "bg-gradient-to-r from-purple-600 to-indigo-600" : "bg-gradient-to-r from-slate-700 to-slate-900"}`}>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold flex items-center gap-2">
+                Hello, {currentUser?.username || "Member"}!
+                {isPremium && <Sparkles className="size-6 text-yellow-300 fill-yellow-300" />}
+              </h2>
+              <p className="text-white/80 mt-1">
+                Your membership level: <span className="font-bold text-white uppercase">{currentUser?.member_profile?.membership_type || "FREE"}</span>
+              </p>
+            </div>
+            {!isPremium && (
+              <button className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-slate-100 transition-colors">
+                Upgrade to Premium
+              </button>
+            )}
+          </div>
+          <div className="absolute right-0 top-0 -mr-8 -mt-8 size-48 rounded-full bg-white/10 blur-3xl" />
+        </div>
+      )}
 
       {/* Stats Summary */}
       <div className="grid auto-rows-min gap-4 md:grid-cols-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="min-h-36 bg-white rounded-xl text-card-foreground shadow-sm border p-6 flex items-center gap-3"
-          >
-            <div className={`p-2 rounded-lg ${stat.color} text-white`}>
-              <stat.icon className="size-8" />
+        {!isProfileReady || partnersLoading ? (
+          [1, 2, 3, 4].map((i) => (
+            <div key={i} className="relative overflow-hidden min-h-36 bg-white rounded-xl shadow-sm border p-6 flex items-center gap-3">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50/50 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+              <div className="size-12 rounded-lg bg-slate-100 animate-pulse" />
+              <div className="space-y-2 flex-1">
+                <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
+                <div className="h-6 w-12 bg-slate-100 rounded animate-pulse" />
+              </div>
             </div>
-            <div>
-              <p className="tracking-tight text-sm font-normal text-slate-500">
-                {stat.label}
-              </p>
-              <p className="text-xl font-bold text-slate-900">{stat.value}</p>
-              {stat.description && (
-                <p className="text-[10px] text-muted-foreground mt-1">{stat.description}</p>
-              )}
+          ))
+        ) : (
+          stats.map((stat, index) => (
+            <div
+              key={index}
+              className="min-h-36 bg-white rounded-xl text-card-foreground shadow-sm border p-6 flex items-center gap-3"
+            >
+              <div className={`p-2 rounded-lg ${stat.color} text-white`}>
+                <stat.icon className="size-8" />
+              </div>
+              <div>
+                <p className="tracking-tight text-sm font-normal text-slate-500">
+                  {stat.label}
+                </p>
+                <p className="text-xl font-bold text-slate-900">{stat.value}</p>
+                {stat.description && (
+                  <p className="text-[10px] text-muted-foreground mt-1">{stat.description}</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Search & Filtering */}
@@ -143,8 +175,23 @@ function DashboardPage() {
       <div className="space-y-4">
         {offersLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-64 rounded-xl bg-slate-100 animate-pulse" />
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="relative overflow-hidden h-72 rounded-xl bg-white border shadow-sm p-4">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-50/50 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="space-y-2 flex-1">
+                    <div className="h-5 w-3/4 bg-slate-100 rounded animate-pulse" />
+                    <div className="h-3 w-1/2 bg-slate-100 rounded animate-pulse" />
+                  </div>
+                  <div className="size-12 rounded-lg bg-slate-100 animate-pulse" />
+                </div>
+                <div className="space-y-3 mb-6">
+                  <div className="h-4 w-1/3 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-3 w-full bg-slate-100 rounded animate-pulse" />
+                  <div className="h-3 w-2/3 bg-slate-100 rounded animate-pulse" />
+                </div>
+                <div className="h-10 w-full bg-slate-100 rounded-lg animate-pulse mt-auto" />
+              </div>
             ))}
           </div>
         ) : filteredOffers.length > 0 ? (

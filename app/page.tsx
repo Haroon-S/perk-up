@@ -4,6 +4,7 @@ import { Hero } from "@/src/components/landingPage/Hero";
 import { Partners } from "@/src/components/landingPage/Partners";
 import { Services } from "@/src/components/landingPage/Services";
 import { Footer } from "@/src/components/landingPage/Footer";
+import { useGetPartners } from "@/src/services/perkup/perkup.queries";
 
 // ─── Utility: simple cn helper (use clsx/cn from shadcn if available) ─────────
 
@@ -11,10 +12,16 @@ import { Footer } from "@/src/components/landingPage/Footer";
 
 export interface PartnerType {
   id: number;
-  logo: string;
+  logo: string | null;
   name: string;
   description: string;
   location: string;
+  offers?: Array<{
+    id: number;
+    title: string;
+    discount_type: string;
+    discount_value: string;
+  }>;
 }
 
 export interface ServiceType {
@@ -22,30 +29,6 @@ export interface ServiceType {
   title: string;
   desc: string;
 }
-
-const partners = [
-  {
-    id: 1,
-    logo: "/logo.png",
-    name: "Partner One",
-    description: "Partner One",
-    location: "Times Square, Manhattan, NY, USA",
-  },
-  {
-    id: 2,
-    logo: "/logo.png",
-    name: "Partner Two",
-    description: "Partner Two",
-    location: "Times Square, Manhattan, NY, USA",
-  },
-  {
-    id: 3,
-    logo: "/logo.png",
-    name: "Partner Three",
-    description: "Partner Three",
-    location: "Times Square, Manhattan, NY, USA",
-  },
-];
 
 const services = [
   {
@@ -62,11 +45,13 @@ const services = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
+  const { data: realPartners } = useGetPartners();
+
   return (
     <main className="bg-black">
       <Navbar />
       <Hero />
-      <Partners partners={partners} isLandingPage />
+      <Partners partners={realPartners || []} isLandingPage />
       <Services services={services} />
       <Footer />
     </main>

@@ -67,12 +67,12 @@ export function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/login">
+          <a href="/login/index.html">
             <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2 cursor-pointer">
               Log In
             </button>
-          </Link>
-          <Link href="/login">
+          </a>
+          <a href="/login/index.html">
             <button
               className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
               style={{
@@ -87,7 +87,7 @@ export function Navbar() {
                 }}
               />
             </button>
-          </Link>
+          </a>
         </div>
 
         {/* Mobile menu btn */}
@@ -134,13 +134,15 @@ export function Navbar() {
               {item}
             </Link>
           ))}
-          <button className="text-left text-white/70">Log In</button>
-          <button
-            className="w-full text-sm font-semibold py-2.5 rounded-full text-white"
-            style={{ background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)" }}
-          >
-            Join Now — €3.99/mo
-          </button>
+          <a href="/login/index.html" className="text-left text-white/70">Log In</a>
+          <a href="/login/index.html">
+            <button
+              className="w-full text-sm font-semibold py-2.5 rounded-full text-white"
+              style={{ background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)" }}
+            >
+              Join Now — €3.99/mo
+            </button>
+          </a>
         </div>
       </div>
     </nav>

@@ -20,12 +20,18 @@ import {
 } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/src/store/authStore";
+import { useGetUserProfile } from "@/src/services/auth/auth.queries";
 
 export function NavUser() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
+
+  const { data: profileData, isFetched } = useGetUserProfile(!!useAuthStore.getState().accessToken);
+
+  const currentUser = profileData || user;
+  const isProfileReady = isFetched || !!user;
 
   const handleLogout = () => {
     logout();
@@ -47,10 +53,18 @@ export function NavUser() {
                   <User className="size-5" />
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.username}</span>
-                <span className="truncate text-xs">{user?.email}</span>
-              </div>
+              {!isProfileReady ? (
+                <div className="grid flex-1 text-left text-sm leading-tight gap-1.5 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/50 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                  <div className="h-3 w-20 bg-sidebar-accent rounded animate-pulse" />
+                  <div className="h-2 w-28 bg-sidebar-accent/50 rounded animate-pulse" />
+                </div>
+              ) : (
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{currentUser?.username}</span>
+                  <span className="truncate text-xs">{currentUser?.email}</span>
+                </div>
+              )}
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -68,10 +82,17 @@ export function NavUser() {
                     <User className="size-5" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.username}</span>
-                  <span className="truncate text-xs">{user?.email}</span>
-                </div>
+                {!isProfileReady ? (
+                  <div className="grid flex-1 text-left text-sm leading-tight gap-1.5">
+                    <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
+                    <div className="h-2 w-28 bg-slate-100 rounded animate-pulse" />
+                  </div>
+                ) : (
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">{currentUser?.username}</span>
+                    <span className="truncate text-xs">{currentUser?.email}</span>
+                  </div>
+                )}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

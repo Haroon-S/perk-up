@@ -7,6 +7,12 @@ export interface Partner {
     logo: string | null;
     description: string;
     location: string;
+    offers?: Array<{
+        id: number;
+        title: string;
+        discount_type: string;
+        discount_value: string;
+    }>;
 }
 
 export interface Offer {
