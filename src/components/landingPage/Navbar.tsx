@@ -1,12 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/src/store/authStore";
 import { handleScrollToSection } from "@/src/utilities/globalHelpers";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function Navbar() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -66,29 +68,52 @@ export function Navbar() {
         </div>
 
         {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <a href="/login/index.html">
-            <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2 cursor-pointer">
-              Log In
-            </button>
-          </a>
-          <a href="/login/index.html">
-            <button
-              className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
-              style={{
-                background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
-              }}
-            >
-              <span className="relative z-10 text-white">Join Now</span>
-              <span
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        {!isAuthenticated ? (
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/login">
+              <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2 cursor-pointer">
+                Log In
+              </button>
+            </Link>
+            <Link href="/register">
+              <button
+                className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
                 style={{
-                  background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                  background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
                 }}
-              />
-            </button>
-          </a>
-        </div>
+              >
+                <span className="relative z-10 text-white">Get premium</span>
+                <span
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                  }}
+                />
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div className="hidden md:flex items-center gap-3">
+            <Link href="/dashboard">
+              <button
+                className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
+                style={{
+                  background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
+                }}
+              >
+                <span className="relative z-10 text-white">
+                  Go to Dashboard
+                </span>
+                <span
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                  }}
+                />
+              </button>
+            </Link>
+          </div>
+        )}
 
         {/* Mobile menu btn */}
         <button
@@ -134,11 +159,15 @@ export function Navbar() {
               {item}
             </Link>
           ))}
-          <a href="/login/index.html" className="text-left text-white/70">Log In</a>
+          <a href="/login/index.html" className="text-left text-white/70">
+            Log In
+          </a>
           <a href="/login/index.html">
             <button
               className="w-full text-sm font-semibold py-2.5 rounded-full text-white"
-              style={{ background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)" }}
+              style={{
+                background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
+              }}
             >
               Join Now — €3.99/mo
             </button>
