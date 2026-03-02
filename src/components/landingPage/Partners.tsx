@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SectionLoader from "../shared/SectionLoader";
+import { Button } from "@/components/ui/button";
+import SubscriptionAlert from "../shared/SubscriptionAlert";
 
 export function PartnerCard({
   partner,
@@ -15,6 +17,7 @@ export function PartnerCard({
   delay: number;
 }) {
   const [visible, setVisible] = useState(false);
+  const [alert, setAlert] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -100,27 +103,35 @@ export function PartnerCard({
             Active Benefits
           </p>
           {partner.offers && partner.offers.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {partner.offers.slice(0, 2).map((offer) => (
-                <div
-                  key={offer.id}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 group/offer"
-                >
-                  <span className="text-sm font-bold text-white group-hover/offer:text-[#4F6EFF]">
-                    {offer.discount_type === "PERCENT"
-                      ? `${parseFloat(offer.discount_value)}%`
-                      : `$${offer.discount_value}`}
-                  </span>
-                  <span className="text-[10px] text-white/40 border-l border-white/10 pl-2">
-                    {offer.title}
-                  </span>
-                </div>
-              ))}
-              {partner.offers.length > 2 && (
-                <div className="text-[10px] text-white/40 flex items-center px-1">
-                  +{partner.offers.length - 2} more
-                </div>
-              )}
+            <div className="">
+              <div className="flex flex-wrap gap-2">
+                {partner.offers.slice(0, 2).map((offer) => (
+                  <div
+                    key={offer.id}
+                    className="bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 group/offer"
+                  >
+                    <span className="text-sm font-bold text-white group-hover/offer:text-[#4F6EFF]">
+                      {offer.discount_type === "PERCENT"
+                        ? `${parseFloat(offer.discount_value)}%`
+                        : `$${offer.discount_value}`}
+                    </span>
+                    <span className="text-[10px] text-white/40 border-l border-white/10 pl-2">
+                      {offer.title}
+                    </span>
+                  </div>
+                ))}
+                {partner.offers.length > 2 && (
+                  <div className="text-[10px] text-white/40 flex items-center px-1">
+                    +{partner.offers.length - 2} more
+                  </div>
+                )}
+              </div>
+              <Button
+                className=" px-3 py-1.5 mt-5 h-fit"
+                onClick={() => setAlert(true)}
+              >
+                Redeem
+              </Button>
             </div>
           ) : (
             <p className="text-xs text-white/20 italic">
@@ -129,6 +140,7 @@ export function PartnerCard({
           )}
         </div>
       </div>
+      <SubscriptionAlert alert={alert} setAlert={setAlert} />
     </div>
   );
 }
