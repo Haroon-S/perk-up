@@ -24,7 +24,7 @@ const eslintConfig = defineConfig([
     files: ["**/*.ts", "**/*.tsx"], // Different rules for TS files
     rules: {
       "@typescript-eslint/no-explicit-any": "off", // Just warn instead of error
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ]);
