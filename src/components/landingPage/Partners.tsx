@@ -196,7 +196,7 @@ export function Partners({
 
         {isLandingPage && (
           <div className="text-center">
-            <Link href="/all-partners">
+            <a href="/all-partners/index.html">
               <button
                 className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-full border font-medium text-sm transition-all duration-300 hover:border-[#4F6EFF]/60 cursor-pointer"
                 style={{
@@ -209,7 +209,7 @@ export function Partners({
                   →
                 </span>
               </button>
-            </Link>
+            </a>
           </div>
         )}
         {/* {isLandingPage && (

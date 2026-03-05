@@ -116,21 +116,23 @@ export function Hero() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
           )}
         >
-          <button
-            className="relative group px-8 py-4 rounded-full font-bold text-white text-base overflow-hidden shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
-              boxShadow: "0 0 40px rgba(79,110,255,0.4)",
-            }}
-          >
-            <span className="relative z-10">Start Saving — €3.99/mo</span>
-            <span
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          <a href="/register/index.html">
+            <button
+              className="relative group px-8 py-4 rounded-full font-bold text-white text-base overflow-hidden shadow-lg"
               style={{
-                background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                background: "linear-gradient(135deg, #4F6EFF, #8B5CF6)",
+                boxShadow: "0 0 40px rgba(79,110,255,0.4)",
               }}
-            />
-          </button>
+            >
+              <span className="relative z-10">Get premium — €3.99/mo</span>
+              <span
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: "linear-gradient(135deg, #6B8AFF, #A78BFA)",
+                }}
+              />
+            </button>
+          </a>
           <button
             onClick={() => handleScrollToSection("partners")}
             className="px-8 py-4 rounded-full font-medium text-white/60 hover:text-white border border-white/10 hover:border-white/30 transition-all duration-300 text-base"

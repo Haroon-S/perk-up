@@ -48,22 +48,22 @@ export default function AuthProvider({
 
     // 1. Redirect unauthenticated users from dashboard to login
     if (isDashboardRoute && !accessToken && !isLoading) {
-      router.push("/login");
+      window.location.href = "/login/index.html";
     }
 
     // 2. Redirect authenticated users from login/register to dashboard
     if (isAuthRoute && accessToken && data) {
-      router.push("/dashboard");
+      window.location.href = "/dashboard/index.html";
     }
-  }, [isRehydrated, pathname, accessToken, isLoading, data, router]);
+  }, [isRehydrated, pathname, accessToken, isLoading, data]);
 
   // Logout if profile fails (expired token)
   useEffect(() => {
     if (isError && accessToken) {
       logout();
-      router.push("/login");
+      window.location.href = "/login/index.html";
     }
-  }, [isError, logout, accessToken, router]);
+  }, [isError, logout, accessToken]);
 
   return children;
 }

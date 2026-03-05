@@ -9,6 +9,7 @@ import { RedemptionModal } from "@/components/redemption-modal";
 import { useAuthStore } from "@/src/store/authStore";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import SubscriptionAlert from "@/src/components/shared/SubscriptionAlert";
 
 function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -20,6 +21,7 @@ function DashboardPage() {
   const [selectedOffer, setSelectedOffer] = useState<any>(null);
   const [redemptionData, setRedemptionData] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false);
 
   const createRedemption = useCreateRedemptionMutation();
 
@@ -29,6 +31,11 @@ function DashboardPage() {
   const isProfileReady = profileFetched || !!user;
 
   const handleRedeem = async (offer: any) => {
+    if (!isPremium) {
+      setIsSubscriptionAlertOpen(true);
+      return;
+    }
+
     try {
       const data = await createRedemption.mutateAsync({ offer_id: offer.id });
       setRedemptionData(data);
@@ -103,8 +110,25 @@ function DashboardPage() {
                 Hello, {currentUser?.username || "Member"}!
                 {isPremium && <Sparkles className="size-6 text-yellow-300 fill-yellow-300" />}
               </h2>
-              <p className="text-white/80 mt-1">
-                Your membership level: <span className="font-bold text-white uppercase">{currentUser?.member_profile?.membership_type || "FREE"}</span>
+              <p className="text-white/80 mt-1 flex items-center flex-wrap gap-2">
+                <span>Your membership level: <span className="font-bold text-white uppercase">{currentUser?.member_profile?.membership_type || "FREE"}</span></span>
+                {currentUser?.member_profile?.is_trial && (
+                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold border transition-colors ${typeof currentUser.member_profile.trial_days_remaining === 'number'
+                      ? currentUser.member_profile.trial_days_remaining >= 0
+                        ? "bg-yellow-400/20 text-yellow-300 border-yellow-400/30"
+                        : "bg-red-400/20 text-red-300 border-red-400/30"
+                      : "bg-blue-400/20 text-blue-300 border-blue-400/30"
+                    }`}>
+                    {typeof currentUser.member_profile.trial_days_remaining === 'number'
+                      ? currentUser.member_profile.trial_days_remaining === 0
+                        ? "TRIAL ENDS TODAY"
+                        : currentUser.member_profile.trial_days_remaining > 0
+                          ? `TRIAL — ${currentUser.member_profile.trial_days_remaining} DAYS LEFT`
+                          : "TRIAL EXPIRED"
+                      : "TRIAL ACTIVE"
+                    }
+                  </span>
+                )}
               </p>
             </div>
             {!isPremium && (
@@ -231,6 +255,10 @@ function DashboardPage() {
         onClose={() => setIsModalOpen(false)}
         offer={selectedOffer}
         redemption={redemptionData}
+      />
+      <SubscriptionAlert
+        alert={isSubscriptionAlertOpen}
+        setAlert={setIsSubscriptionAlertOpen}
       />
     </div>
   );

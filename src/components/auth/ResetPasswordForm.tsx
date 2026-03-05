@@ -46,13 +46,13 @@ function ResetPasswordForm() {
           disabled={loading}
           loading={loading}
         />
-        <Link
-          href="/login"
+        <a
+          href="/login/index.html"
           className=" text-default hover:underline flex-center gap-3 mt-8 "
         >
           {" "}
           <User className="size-5" /> Back To Login
-        </Link>
+        </a>
       </div>
     </div>
   );

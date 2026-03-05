@@ -8,8 +8,10 @@ export interface MemberProfile {
   membership_id: string;
   qr_code: string | null;
   is_active: boolean;
+  is_trial: boolean;
   redemption_count: number;
   total_offers: number;
+  trial_days_remaining: number | null;
 }
 
 export interface UserProfile {

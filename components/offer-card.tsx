@@ -60,10 +60,9 @@ export function OfferCard({ offer, onRedeem, isPremiumUser }: OfferCardProps) {
 
                 <Button
                     onClick={() => onRedeem(offer)}
-                    disabled={isLocked}
-                    className={`w-full ${isLocked ? "bg-slate-100 text-slate-400" : "bg-primary hover:bg-primary/90"}`}
+                    className="w-full bg-primary hover:bg-primary/90"
                 >
-                    {isLocked ? "Premium Only" : "Redeem Now"}
+                    Redeem Now
                 </Button>
             </div>
         </div>

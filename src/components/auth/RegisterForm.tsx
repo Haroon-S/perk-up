@@ -39,13 +39,27 @@ function RegisterForm() {
     mutate(values, {
       onSuccess: () => {
         toast.success("Registration successful! Please login.");
-        router.push("/login");
+        window.location.href = "/login/index.html";
       },
 
       onError: (error: any) => {
-        const message =
-          error?.response?.data?.message ||
-          "Registration failed. Please try again.";
+        const errorData = error?.response?.data;
+        let message = "Registration failed. Please try again.";
+
+        if (typeof errorData === "object" && errorData !== null) {
+          // Flatten DRF field errors: e.g. { "username": ["exists"], "email": ["invalid"] }
+          const errorMessages = Object.entries(errorData)
+            .map(([field, msgs]) => {
+              const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+              const fieldMsgs = Array.isArray(msgs) ? msgs.join(" ") : msgs;
+              return `${fieldName}: ${fieldMsgs}`;
+            })
+            .join(" | ");
+
+          if (errorMessages) message = errorMessages;
+        } else if (errorData?.message) {
+          message = errorData.message;
+        }
 
         toast.error(message);
       },
@@ -127,12 +141,12 @@ function RegisterForm() {
               <div className="w-full flex items-center justify-end">
                 <p className=" text-sm text-muted-foreground">
                   Already have an account?{" "}
-                  <Link
+                  <a
                     className=" font-medium text-default hover:underline"
-                    href={"/login"}
+                    href={"/login/index.html"}
                   >
                     Login
-                  </Link>
+                  </a>
                 </p>
               </div>
               <CommonSubmitButton

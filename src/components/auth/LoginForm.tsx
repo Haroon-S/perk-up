@@ -41,7 +41,7 @@ function LoginForm() {
 
         setTokens(access, refresh);
         toast.success("Login successful!");
-        router.push("/dashboard");
+        window.location.href = "/dashboard/index.html";
       },
       onError: (error: any) => {
         const message =
@@ -124,23 +124,23 @@ function LoginForm() {
                 <div className="col-span-2 md:col-span-1">
                   <p className=" text-sm text-muted-foreground">
                     Don&apos;t have an account?{" "}
-                    <Link
+                    <a
                       className=" font-medium text-default hover:underline"
-                      href={"/register"}
+                      href={"/register/index.html"}
                     >
                       Register
-                    </Link>
+                    </a>
                   </p>
                 </div>
                 <div className={"col-span-2 md:col-span-1 text-right"}>
                   <p className="text-sm text-muted-foreground">
                     Forgot Password?{" "}
-                    <Link
+                    <a
                       className=" font-medium text-default hover:underline"
-                      href={"/reset-password"}
+                      href={"/reset-password/index.html"}
                     >
                       Click Here
-                    </Link>
+                    </a>
                   </p>
                 </div>
               </div>

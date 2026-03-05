@@ -34,7 +34,7 @@ function SubscriptionAlert({ alert, setAlert }: SubscriptionAlertProps) {
           <AlertDialogAction
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.preventDefault();
-              router.push("/register");
+              window.location.href = "/register/index.html";
             }}
           >
             To Subscription
