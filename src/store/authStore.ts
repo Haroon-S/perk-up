@@ -9,6 +9,7 @@ export interface MemberProfile {
   qr_code: string | null;
   is_active: boolean;
   is_trial: boolean;
+  has_used_trial: boolean;
   redemption_count: number;
   total_offers: number;
   trial_days_remaining: number | null;

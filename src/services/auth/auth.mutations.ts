@@ -29,8 +29,19 @@ export const useUserRegisterMutation = () => {
   });
 };
 
+export const activateTrial = async () => {
+  const { data } = await axiosInstance.post("user/activate-trial/");
+  return data;
+};
+
 export const useUserLoginMutation = () => {
   return useMutation({
     mutationFn: userLogin,
+  });
+};
+
+export const useActivateTrialMutation = () => {
+  return useMutation({
+    mutationFn: activateTrial,
   });
 };

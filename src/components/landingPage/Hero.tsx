@@ -116,7 +116,7 @@ export function Hero() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
           )}
         >
-          <a href="/register/index.html">
+          <a href="/register/">
             <button
               className="relative group px-8 py-4 rounded-full font-bold text-white text-base overflow-hidden shadow-lg"
               style={{

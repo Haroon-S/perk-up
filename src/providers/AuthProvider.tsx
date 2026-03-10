@@ -48,12 +48,12 @@ export default function AuthProvider({
 
     // 1. Redirect unauthenticated users from dashboard to login
     if (isDashboardRoute && !accessToken && !isLoading) {
-      window.location.href = "/login/index.html";
+      window.location.href = "/login/";
     }
 
     // 2. Redirect authenticated users from login/register to dashboard
     if (isAuthRoute && accessToken && data) {
-      window.location.href = "/dashboard/index.html";
+      window.location.href = "/dashboard/";
     }
   }, [isRehydrated, pathname, accessToken, isLoading, data]);
 
@@ -61,7 +61,7 @@ export default function AuthProvider({
   useEffect(() => {
     if (isError && accessToken) {
       logout();
-      window.location.href = "/login/index.html";
+      window.location.href = "/login/";
     }
   }, [isError, logout, accessToken]);
 

@@ -70,12 +70,12 @@ export function Navbar() {
         {/* CTA */}
         {!isAuthenticated ? (
           <div className="hidden md:flex items-center gap-3">
-            <a href="/login/index.html">
+            <a href="/login/">
               <button className="text-sm text-white/70 hover:text-white transition-colors px-4 py-2 cursor-pointer">
                 Log In
               </button>
             </a>
-            <a href="/register/index.html">
+            <a href="/register/">
               <button
                 className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
                 style={{
@@ -94,7 +94,7 @@ export function Navbar() {
           </div>
         ) : (
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/dashboard">
+            <a href="/dashboard/">
               <button
                 className="relative text-sm font-semibold px-5 py-2.5 rounded-full overflow-hidden group cursor-pointer"
                 style={{
@@ -111,7 +111,7 @@ export function Navbar() {
                   }}
                 />
               </button>
-            </Link>
+            </a>
           </div>
         )}
 
@@ -159,10 +159,10 @@ export function Navbar() {
               {item}
             </Link>
           ))}
-          <a href="/login/index.html" className="text-left text-white/70">
+          <a href="/login/" className="text-left text-white/70">
             Log In
           </a>
-          <a href="/register/index.html">
+          <a href="/register/">
             <button
               className="w-full text-sm font-semibold py-2.5 rounded-full text-white"
               style={{

@@ -10,6 +10,8 @@ import { useAuthStore } from "@/src/store/authStore";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import SubscriptionAlert from "@/src/components/shared/SubscriptionAlert";
+import { useActivateTrialMutation } from "@/src/services/auth/auth.mutations";
+import { useQueryClient } from "@tanstack/react-query";
 
 function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -22,7 +24,10 @@ function DashboardPage() {
   const [redemptionData, setRedemptionData] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false);
+  const [subscriptionAlertType, setSubscriptionAlertType] = useState<"redeem" | "upgrade">("redeem");
 
+  const queryClient = useQueryClient();
+  const activateTrial = useActivateTrialMutation();
   const createRedemption = useCreateRedemptionMutation();
 
   // Use profileData as priority, fall back to store user
@@ -32,6 +37,7 @@ function DashboardPage() {
 
   const handleRedeem = async (offer: any) => {
     if (!isPremium) {
+      setSubscriptionAlertType("redeem");
       setIsSubscriptionAlertOpen(true);
       return;
     }
@@ -45,6 +51,21 @@ function DashboardPage() {
       const message = error.response?.data?.detail || "Failed to create redemption";
       toast.error(message);
     }
+  };
+
+  const handleActivateTrial = async () => {
+    try {
+      await activateTrial.mutateAsync();
+      toast.success("Trial activated! Enjoy your 7 days of Premium.");
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Failed to activate trial");
+    }
+  };
+
+  const handleUpgradeClick = () => {
+    setSubscriptionAlertType("upgrade");
+    setIsSubscriptionAlertOpen(true);
   };
 
   const filteredOffers = useMemo(() => {
@@ -114,10 +135,10 @@ function DashboardPage() {
                 <span>Your membership level: <span className="font-bold text-white uppercase">{currentUser?.member_profile?.membership_type || "FREE"}</span></span>
                 {currentUser?.member_profile?.is_trial && (
                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold border transition-colors ${typeof currentUser.member_profile.trial_days_remaining === 'number'
-                      ? currentUser.member_profile.trial_days_remaining >= 0
-                        ? "bg-yellow-400/20 text-yellow-300 border-yellow-400/30"
-                        : "bg-red-400/20 text-red-300 border-red-400/30"
-                      : "bg-blue-400/20 text-blue-300 border-blue-400/30"
+                    ? currentUser.member_profile.trial_days_remaining >= 0
+                      ? "bg-yellow-400/20 text-yellow-300 border-yellow-400/30"
+                      : "bg-red-400/20 text-red-300 border-red-400/30"
+                    : "bg-blue-400/20 text-blue-300 border-blue-400/30"
                     }`}>
                     {typeof currentUser.member_profile.trial_days_remaining === 'number'
                       ? currentUser.member_profile.trial_days_remaining === 0
@@ -132,9 +153,24 @@ function DashboardPage() {
               </p>
             </div>
             {!isPremium && (
-              <button className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-slate-100 transition-colors">
-                Upgrade to Premium
-              </button>
+              <div className="flex items-center gap-3 mt-4 md:mt-0">
+                {!currentUser?.member_profile?.has_used_trial && (
+                  <button
+                    onClick={handleActivateTrial}
+                    disabled={activateTrial.isPending}
+                    className="bg-yellow-400 text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-yellow-300 transition-colors flex items-center gap-2 shadow-lg"
+                  >
+                    {activateTrial.isPending ? <Loader2 className="animate-spin size-4" /> : <Sparkles className="size-4" />}
+                    Start Your 7-Day Free Trial
+                  </button>
+                )}
+                <button
+                  onClick={handleUpgradeClick}
+                  className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-slate-100 transition-colors"
+                >
+                  Upgrade to Premium
+                </button>
+              </div>
             )}
           </div>
           <div className="absolute right-0 top-0 -mr-8 -mt-8 size-48 rounded-full bg-white/10 blur-3xl" />
@@ -259,6 +295,7 @@ function DashboardPage() {
       <SubscriptionAlert
         alert={isSubscriptionAlertOpen}
         setAlert={setIsSubscriptionAlertOpen}
+        type={subscriptionAlertType}
       />
     </div>
   );

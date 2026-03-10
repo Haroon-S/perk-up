@@ -41,7 +41,7 @@ function LoginForm() {
 
         setTokens(access, refresh);
         toast.success("Login successful!");
-        window.location.href = "/dashboard/index.html";
+        window.location.href = "/dashboard/";
       },
       onError: (error: any) => {
         const message =
@@ -126,7 +126,7 @@ function LoginForm() {
                     Don&apos;t have an account?{" "}
                     <a
                       className=" font-medium text-default hover:underline"
-                      href={"/register/index.html"}
+                      href={"/register/"}
                     >
                       Register
                     </a>
@@ -137,7 +137,7 @@ function LoginForm() {
                     Forgot Password?{" "}
                     <a
                       className=" font-medium text-default hover:underline"
-                      href={"/reset-password/index.html"}
+                      href={"/reset-password/"}
                     >
                       Click Here
                     </a>

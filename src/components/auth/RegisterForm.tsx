@@ -39,7 +39,7 @@ function RegisterForm() {
     mutate(values, {
       onSuccess: () => {
         toast.success("Registration successful! Please login.");
-        window.location.href = "/login/index.html";
+        window.location.href = "/login/";
       },
 
       onError: (error: any) => {
@@ -143,7 +143,7 @@ function RegisterForm() {
                   Already have an account?{" "}
                   <a
                     className=" font-medium text-default hover:underline"
-                    href={"/login/index.html"}
+                    href={"/login/"}
                   >
                     Login
                   </a>
