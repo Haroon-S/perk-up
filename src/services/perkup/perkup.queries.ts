@@ -37,7 +37,7 @@ export const getOffers = async (): Promise<Offer[]> => {
 };
 
 export const getRedemptionStatus = async (redemptionId: string): Promise<{ status: string }> => {
-    const { data } = await axiosInstance.get<{ status: string }>(`status/?redemption_id=${redemptionId}`);
+    const { data } = await axiosInstance.get<{ status: string }>(`redeem/status/?redemption_id=${redemptionId}`);
     return data;
 };
 
