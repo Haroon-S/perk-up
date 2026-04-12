@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { SquareTerminal } from "lucide-react";
+import { SquareTerminal, Crown } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -29,6 +29,11 @@ const data = {
       url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
+    },
+    {
+      title: "Membership",
+      url: "/dashboard/membership",
+      icon: Crown,
     },
   ],
 };

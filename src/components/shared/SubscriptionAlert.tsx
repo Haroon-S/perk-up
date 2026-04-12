@@ -30,8 +30,8 @@ function SubscriptionAlert({ alert, setAlert, type = "redeem" }: SubscriptionAle
           </AlertDialogTitle>
           <AlertDialogDescription>
             {isUpgrade
-              ? "To upgrade your membership, please contact the PerkUp Admin team for assistance."
-              : "This is a premium perk. Please upgrade your membership to redeem this offer."}
+              ? "Gain unlimited access to all perks and exclusive discounts by upgrading to a Premium membership."
+              : "This is a premium perk. Please upgrade your membership to unlock and redeem this offer."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -49,9 +49,18 @@ function SubscriptionAlert({ alert, setAlert, type = "redeem" }: SubscriptionAle
               </AlertDialogAction>
             </>
           ) : (
-            <AlertDialogAction onClick={() => setAlert(false)}>
-              {isUpgrade ? "Understood" : "Got it"}
-            </AlertDialogAction>
+            <>
+              <AlertDialogCancel onClick={() => setAlert(false)}>Not Now</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  setAlert(false);
+                  window.location.href = "/dashboard/membership/";
+                }}
+              >
+                Upgrade Now
+              </AlertDialogAction>
+            </>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
