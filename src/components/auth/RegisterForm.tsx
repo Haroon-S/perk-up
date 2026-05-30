@@ -38,8 +38,8 @@ function RegisterForm() {
   const onSubmit = (values: RegisterSchema) => {
     mutate(values, {
       onSuccess: () => {
-        toast.success("Registration successful! Please login.");
-        window.location.href = "/login/";
+        toast.success("Account Registered Successfully!");
+        router.push("/login/");
       },
 
       onError: (error: any) => {
