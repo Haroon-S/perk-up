@@ -16,17 +16,22 @@ import {
 } from "@/src/services/payments/payments.queries";
 import { PayPalSubscriptionButton } from "@/components/paypal/PayPalSubscriptionButton";
 import { useAuthStore } from "@/src/store/authStore";
+import { useGetUserProfile } from "@/src/services/auth/auth.queries";
 
 export default function MembershipPage() {
   const { data: config, isLoading: configLoading } = usePayPalConfig();
   const { data: subscription, isLoading: subLoading, isError } = useMembershipSubscription();
   const user = useAuthStore((state) => state.user);
+  const { data: profileData, isLoading: profileLoading } = useGetUserProfile(!!useAuthStore.getState().accessToken);
 
-  const isLoading = configLoading || subLoading;
+  const currentUser = profileData || user;
+  const isLoading = configLoading || subLoading || profileLoading;
   
   // Logic to determine if user can subscribe
   const isActive = subscription?.access_status === "enabled" || subscription?.access_status === "admin_enabled";
   const isCancelled = subscription?.status === "cancelled";
+  const isTrialActive = currentUser?.member_profile?.is_trial && currentUser?.member_profile?.is_active;
+  const trialDaysRemaining = currentUser?.member_profile?.trial_days_remaining;
   
   if (isLoading) {
     return (
@@ -59,16 +64,32 @@ export default function MembershipPage() {
               <div className="flex justify-between items-center py-3 border-b border-slate-50">
                 <span className="text-slate-500">Plan Level</span>
                 <span className="font-bold uppercase text-slate-900">
-                  {subscription?.plan?.name || user?.member_profile?.membership_type || "Free Member"}
+                  {subscription?.plan?.name || currentUser?.member_profile?.membership_type || "Free Member"}
                 </span>
               </div>
               
               <div className="flex justify-between items-center py-3 border-b border-slate-50">
                 <span className="text-slate-500">Status</span>
                 <div className="flex items-center gap-2">
-                  <div className={`size-2 rounded-full ${isActive ? 'bg-green-500' : 'bg-slate-300'}`} />
-                  <span className={`font-bold uppercase ${isActive ? 'text-green-600' : 'text-slate-500'}`}>
-                    {subscription?.status || "Inactive"}
+                  <div className={`size-2 rounded-full ${
+                    isActive 
+                      ? 'bg-green-500' 
+                      : isTrialActive 
+                        ? 'bg-yellow-500' 
+                        : 'bg-slate-300'
+                  }`} />
+                  <span className={`font-bold uppercase ${
+                    isActive 
+                      ? 'text-green-600' 
+                      : isTrialActive 
+                        ? 'text-yellow-600' 
+                        : 'text-slate-500'
+                  }`}>
+                    {isActive 
+                      ? (subscription?.status || "Active") 
+                      : isTrialActive 
+                        ? "Trial" 
+                        : (subscription?.status || "Inactive")}
                   </span>
                 </div>
               </div>
@@ -87,6 +108,20 @@ export default function MembershipPage() {
                 <div className="text-sm text-blue-700">
                   <p className="font-bold">You are a Premium Member!</p>
                   <p>Enjoy all active perks and exclusive discounts across the platform.</p>
+                </div>
+              </div>
+            ) : isTrialActive ? (
+              <div className="bg-yellow-50 p-4 rounded-xl flex items-start gap-3">
+                <Calendar className="size-5 text-yellow-600 mt-0.5" />
+                <div className="text-sm text-yellow-700">
+                  <p className="font-bold">You are on a Free Trial!</p>
+                  <p>
+                    {typeof trialDaysRemaining === "number"
+                      ? trialDaysRemaining === 0
+                        ? "Your trial ends today. Subscribe below to keep premium benefits."
+                        : `You have ${trialDaysRemaining} days left in your trial. Subscribe below to ensure uninterrupted access.`
+                      : "Enjoy all premium perks during your trial period!"}
+                  </p>
                 </div>
               </div>
             ) : isCancelled ? (
