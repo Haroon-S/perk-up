@@ -34,7 +34,12 @@ function LoginForm() {
   });
 
   async function onSubmit(values: LoginSchema) {
-    mutate(values, {
+    const payload = {
+      ...values,
+      email: values.email.trim().toLowerCase(),
+    };
+
+    mutate(payload, {
       onSuccess: (data) => {
         const access = data.tokens.access;
         const refresh = data.tokens.refresh;
@@ -79,6 +84,10 @@ function LoginForm() {
                       <FormControl>
                         <Input
                           id="email"
+                          type="email"
+                          autoCapitalize="none"
+                          autoCorrect="off"
+                          spellCheck="false"
                           placeholder="eg. abc@123.com"
                           {...field}
                         />

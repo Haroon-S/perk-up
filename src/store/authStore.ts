@@ -41,8 +41,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   setTokens: (access, refresh) => {
-    localStorage.setItem("access_token", access);
-    localStorage.setItem("refresh_token", refresh);
+    try {
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+    } catch {
+      // Ignore Safari storage restrictions
+    }
+
     setCookie("access_token", access, {
       maxAge: 60 * 60 * 24,
       path: "/",
@@ -65,12 +70,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    try {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+    } catch {
+      // Ignore Safari storage restrictions
+    }
+
     deleteCookie("access_token");
     deleteCookie("refresh_token");
 
     document.cookie = "access_token=; Max-Age=0; path=/;";
+    document.cookie = "refresh_token=; Max-Age=0; path=/;";
 
     set({
       accessToken: null,

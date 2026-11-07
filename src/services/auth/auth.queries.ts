@@ -11,7 +11,10 @@ export const useGetUserProfile = (enabled: boolean) => {
   return useQuery<UserProfile>({
     queryKey: ["userProfile"],
     queryFn: getUserProfile,
-    retry: false,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) return false;
+      return failureCount < 1;
+    },
     enabled,
   });
 };

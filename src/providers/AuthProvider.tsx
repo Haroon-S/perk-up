@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/src/store/authStore";
 import { useGetUserProfile } from "../services/auth/auth.queries";
 import { usePathname, useRouter } from "next/navigation";
+import { getCookie } from "../utilities/cookiesHelpers";
 
 export default function AuthProvider({
   children,
@@ -21,8 +22,22 @@ export default function AuthProvider({
 
   // Rehydrate tokens once on mount
   useEffect(() => {
-    const access = localStorage.getItem("access_token");
-    const refresh = localStorage.getItem("refresh_token");
+    let access: string | null = null;
+    let refresh: string | null = null;
+
+    try {
+      access = localStorage.getItem("access_token");
+      refresh = localStorage.getItem("refresh_token");
+    } catch {
+      // Storage access may be restricted in Safari / private browsing
+    }
+
+    if (!access) {
+      access = getCookie("access_token");
+    }
+    if (!refresh) {
+      refresh = getCookie("refresh_token");
+    }
 
     if (access && refresh) {
       setTokens(access, refresh);
@@ -30,7 +45,7 @@ export default function AuthProvider({
     setIsRehydrated(true);
   }, [setTokens]);
 
-  const { data, isError, isLoading } = useGetUserProfile(!!accessToken);
+  const { data, isError, error, isLoading } = useGetUserProfile(!!accessToken);
 
   // Sync profile to Zustand
   useEffect(() => {
@@ -43,27 +58,46 @@ export default function AuthProvider({
   useEffect(() => {
     if (!isRehydrated) return;
 
+    // Check accessToken from store or fallback directly to storage/cookies
+    // to prevent any race condition where rehydration state lags behind in Safari
+    let currentToken = accessToken;
+    if (!currentToken) {
+      try {
+        currentToken = localStorage.getItem("access_token");
+      } catch {
+        // Storage access restricted
+      }
+      if (!currentToken) {
+        currentToken = getCookie("access_token");
+      }
+    }
+
     const isDashboardRoute = pathname?.startsWith("/dashboard");
-    const isAuthRoute = pathname === "/login" || pathname === "/register";
+    const isAuthRoute =
+      pathname?.startsWith("/login") || pathname?.startsWith("/register");
 
     // 1. Redirect unauthenticated users from dashboard to login
-    if (isDashboardRoute && !accessToken && !isLoading) {
+    if (isDashboardRoute && !currentToken && !isLoading) {
       window.location.href = "/login/";
     }
 
     // 2. Redirect authenticated users from login/register to dashboard
-    if (isAuthRoute && accessToken && data) {
+    if (isAuthRoute && currentToken && data) {
       window.location.href = "/dashboard/";
     }
   }, [isRehydrated, pathname, accessToken, isLoading, data]);
 
-  // Logout if profile fails (expired token)
+  // Logout if profile fails with 401 Unauthorized (expired token)
   useEffect(() => {
-    if (isError && accessToken) {
+    if (
+      isError &&
+      accessToken &&
+      (error as any)?.response?.status === 401
+    ) {
       logout();
       window.location.href = "/login/";
     }
-  }, [isError, logout, accessToken]);
+  }, [isError, error, logout, accessToken]);
 
   return children;
 }
