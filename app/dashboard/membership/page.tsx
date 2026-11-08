@@ -5,14 +5,15 @@ import {
   Check, 
   Crown, 
   ShieldCheck, 
-  AlertCircle,
-  Loader2,
-  Calendar,
-  CreditCard
+  AlertCircle, 
+  Loader2, 
+  Calendar, 
+  CreditCard 
 } from "lucide-react";
 import { 
   usePayPalConfig, 
-  useMembershipSubscription 
+  useMembershipSubscription,
+  usePlanPricing 
 } from "@/src/services/payments/payments.queries";
 import { PayPalSubscriptionButton } from "@/components/paypal/PayPalSubscriptionButton";
 import { useAuthStore } from "@/src/store/authStore";
@@ -21,6 +22,7 @@ import { useGetUserProfile } from "@/src/services/auth/auth.queries";
 export default function MembershipPage() {
   const { data: config, isLoading: configLoading } = usePayPalConfig();
   const { data: subscription, isLoading: subLoading, isError } = useMembershipSubscription();
+  const { priceFormatted } = usePlanPricing();
   const user = useAuthStore((state) => state.user);
   const { data: profileData, isLoading: profileLoading } = useGetUserProfile(!!useAuthStore.getState().accessToken);
 
@@ -158,7 +160,7 @@ export default function MembershipPage() {
                 <span className="font-bold uppercase tracking-wider text-xs">Premium Monthly</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-black text-slate-900">€3.99</span>
+                <span className="text-4xl font-black text-slate-900">{priceFormatted}</span>
                 <span className="text-slate-500 font-medium">/month</span>
               </div>
             </div>

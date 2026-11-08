@@ -4,9 +4,12 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { StatRow } from "./StatRow";
 import { handleScrollToSection } from "@/src/utilities/globalHelpers";
+import { usePlanPricing } from "@/src/services/payments/payments.queries";
 
 export function Hero() {
   const [mounted, setMounted] = useState(false);
+  const { priceMonthlyText, pricePerMonthSentence } = usePlanPricing();
+
   useEffect(() => {
     setTimeout(() => setMounted(true), 100);
   }, []);
@@ -40,52 +43,46 @@ export function Hero() {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            animation: "pulse 5s ease-in-out infinite 1s",
           }}
         />
         {/* Grid overlay */}
         <div
-          className="absolute inset-0 opacity-5"
+          className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `linear-gradient(rgba(79,110,255,0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(79,110,255,0.5) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(79,110,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(79,110,255,0.3) 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center">
-        {/* Badge */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-24 pb-16">
+        {/* Pill */}
         <div
           className={cn(
-            "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase mb-8 border transition-all duration-700",
+            "inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 transition-all duration-700",
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
           )}
-          style={{
-            borderColor: "rgba(79,110,255,0.4)",
-            background: "rgba(79,110,255,0.1)",
-            color: "#8BA4FF",
-          }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#4F6EFF] animate-pulse" />
-          Now live across the island
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs text-white/70 tracking-widest uppercase font-medium">
+            Malta's Exclusive Perks Club
+          </span>
         </div>
 
-        {/* Headline */}
+        {/* Heading */}
         <h1
           className={cn(
-            "text-6xl md:text-8xl font-black leading-none tracking-tight mb-6 transition-all duration-700 delay-100",
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+            "text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-white mb-6 leading-none transition-all duration-700 delay-100",
+            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
           )}
           style={{ fontFamily: "'Arial Black', sans-serif" }}
         >
-          <span className="text-white">Save More,</span>
-          <br />
+          Spend Less. <br />
           <span
             style={{
               background:
-                "linear-gradient(135deg, #4F6EFF 0%, #8B5CF6 60%, #C084FC 100%)",
+                "linear-gradient(135deg, #4F6EFF 0%, #8B5CF6 50%, #EC4899 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -104,7 +101,7 @@ export function Hero() {
         >
           PerkUp is an innovative platform where members pay a small
           subscription of just{" "}
-          <span className="text-white font-semibold">€3.99 a month.</span>. In
+          <span className="text-white font-semibold">{pricePerMonthSentence}.</span>. In
           return, they gain access to a variety of exclusive discounts that help
           them save money while supporting businesses !!
         </p>
@@ -124,7 +121,7 @@ export function Hero() {
                 boxShadow: "0 0 40px rgba(79,110,255,0.4)",
               }}
             >
-              <span className="relative z-10">Get premium — €3.99/mo</span>
+              <span className="relative z-10">Get premium — {priceMonthlyText}</span>
               <span
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{

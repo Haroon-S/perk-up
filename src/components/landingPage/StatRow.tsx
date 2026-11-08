@@ -1,6 +1,7 @@
 "use client";
 
 import { useCounter } from "../shared/useCounter";
+import { usePlanPricing } from "@/src/services/payments/payments.queries";
 
 function StatItem({
   value,
@@ -34,9 +35,11 @@ function StatItem({
 }
 
 export function StatRow() {
+  const { price, currencySymbol } = usePlanPricing();
+
   const stats = [
     { value: 50, suffix: "+", label: "Partner Businesses" },
-    { value: 3.99, prefix: "€", label: "Per Month" },
+    { value: price, prefix: currencySymbol, label: "Per Month" },
     { value: 1000, suffix: "+", label: "Active Members" },
   ];
 

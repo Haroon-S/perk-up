@@ -3,7 +3,9 @@ import axiosInstance from "@/lib/axios";
 export interface PayPalConfig {
   client_id: string;
   currency: string;
+  currency_symbol?: string;
   plan_id: string | null;
+  price?: string | number | null;
 }
 
 export interface MembershipSubscription {

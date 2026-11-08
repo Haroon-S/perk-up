@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPayPalConfig, getMembershipSubscription } from "./payments.service";
+import { getPayPalConfig, getMembershipSubscription, PayPalConfig } from "./payments.service";
 
 export const usePayPalConfig = (enabled: boolean = true) => {
-  return useQuery({
+  return useQuery<PayPalConfig>({
     queryKey: ["paypalConfig"],
     queryFn: getPayPalConfig,
     enabled,
@@ -16,4 +16,24 @@ export const useMembershipSubscription = (enabled: boolean = true) => {
     queryFn: getMembershipSubscription,
     enabled,
   });
+};
+
+export const usePlanPricing = () => {
+  const { data: config, isLoading } = usePayPalConfig();
+
+  const priceNumber = config?.price ? Number(config.price) : 3.99;
+  const currencySymbol =
+    config?.currency_symbol ||
+    (config?.currency === "USD" ? "$" : config?.currency === "GBP" ? "£" : "€");
+  const priceFormatted = `${currencySymbol}${priceNumber.toFixed(2)}`;
+
+  return {
+    price: priceNumber,
+    currency: config?.currency || "EUR",
+    currencySymbol,
+    priceFormatted,
+    priceMonthlyText: `${priceFormatted}/mo`,
+    pricePerMonthSentence: `${priceFormatted} a month`,
+    isLoading,
+  };
 };
